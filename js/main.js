@@ -139,12 +139,13 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('div');
 
   if(li) {
-    li.className += li.className ? ' col-large' : 'col-large';
+    li.className += (li.className ? ' col-large' : 'col-large') + " restaurant-card";
   }
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = "Image for restaurant";
   li.append(image);
 
   const name = document.createElement('h1');
