@@ -39,8 +39,6 @@
     console.log('Service worker activating...');
   });
 
-  // I'm a new service worker
-
   self.addEventListener('fetch', function(event) {
     console.log('Service worker is fetching: ', event.request.url);
     event.respondWith(
