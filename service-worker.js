@@ -3,6 +3,7 @@
 
   var filesToCache = [
     '.',
+    '/',
     'css/styles.css',
     'js/dbhelper.js',
     'js/main.js',
@@ -17,11 +18,12 @@
     'img/8.jpg',
     'img/9.jpg',
     'img/10.jpg',
+    'data/restaurants.json',
     'index.html',
     'restaurant.html'
   ];
 
-  var staticCacheName = 'pages-cache-v1';
+  var staticCacheName = 'mws-restaurant-v1';
 
   self.addEventListener('install', function(event) {
     console.log('Service worker installing...');
@@ -40,7 +42,12 @@
   // I'm a new service worker
 
   self.addEventListener('fetch', function(event) {
-    console.log('Fetching:', event.request.url);
+    console.log('Service worker is fetching: ', event.request.url);
+    event.respondWith(
+      caches.match(event.request).then(function(response) {
+        return response || fetch(event.request);
+      })
+    );
   });
 
 })();
