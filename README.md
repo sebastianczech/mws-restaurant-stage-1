@@ -1,5 +1,4 @@
 # Mobile Web Specialist Certification Course
----
 
 ## Before starting reviews
 
