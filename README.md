@@ -2,7 +2,7 @@
 
 ## Before starting reviews
 
-In files ``index.html`` and ``restaurant.html`` I have't left my Google API keys, so you have to [generate yours using e.g. these instructions](https://developers.google.com/maps/documentation/javascript/get-api-key).
+In files ``index.html`` and ``restaurant.html`` I have't left my Google API keys, so you have to [generate yours using e.g. these instructions](https://developers.google.com/maps/documentation/javascript/get-api-key) and put it in both files, where there is ``YOUR_GOOGLE_MAPS_API_KEY``.
 
 ## Starting application locally
 
