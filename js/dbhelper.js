@@ -36,6 +36,7 @@ class DBHelper {
       })
       .then(function(responseJson) {
           console.log(responseJson);
+          // console.log("Development server response: " + JSON.stringify(responseJson));
           return responseJson;
       })
       .then(function(responseJson) {
@@ -43,7 +44,7 @@ class DBHelper {
       })
       .catch(function(error) {
           callback(error, null);
-      });
+      })
   }
 
   /**
