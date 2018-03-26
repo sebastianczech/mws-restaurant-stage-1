@@ -23,7 +23,7 @@
     'restaurant.html'
   ];
 
-  var staticCacheName = 'mws-restaurant-v1';
+  var staticCacheName = 'mws-restaurant-cache-v1';
 
   self.addEventListener('install', function(event) {
     console.log('Service worker installing...');
@@ -43,7 +43,40 @@
     console.log('Service worker is fetching: ', event.request.url);
     event.respondWith(
       caches.match(event.request).then(function(response) {
-        return response || fetch(event.request);
+        return response || fetch(event.request).then(function(response) {
+          if (response.url.includes("1337")) {
+             var reply = response.clone();
+             reply.json().then(function(data) {
+               console.log('Service worker is adding ' + reply.url + ' to indexed database: ', data);
+
+               // https://gist.github.com/BigstickCarpet/a0d6389a5d0e3a24814b
+               const indexedDBName = 'mws-restaurant-db-v1';
+               const storeName = 'mws-restaurant-store-v1';
+               const request = indexedDB.open(indexedDBName, 1 );
+
+               request.onupgradeneeded = function(event) {
+                   var db = event.target.result;
+                   var store = db.createObjectStore(storeName, {keyPath: "id"});
+               };
+
+               request.onsuccess = function(event) {
+                   var db = event.target.result;
+                   var tx = db.transaction(storeName, "readwrite");
+                   var store = tx.objectStore(storeName);
+
+                   data.forEach(function (item) {
+                     store.put(item);
+                   })
+
+                   tx.oncomplete = function() {
+                       db.close();
+                   };
+               }
+             })
+          }
+
+          return response;
+        });
       })
     );
   });
