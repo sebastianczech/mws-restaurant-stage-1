@@ -43,6 +43,27 @@
     console.log('Service worker is fetching: ', event.request.url);
     event.respondWith(
       caches.match(event.request).then(function(response) {
+        const indexedDBName = 'mws-restaurant-db-v1';
+        const storeName = 'mws-restaurant-store-v1';
+        const request = indexedDB.open(indexedDBName, 1 );
+
+        request.onsuccess = function(event) {
+            var db = event.target.result;
+            var tx = db.transaction(storeName, "readwrite");
+            var store = tx.objectStore(storeName);
+
+            const storeGetAll = store.getAll()
+            var data = storeGetAll.onsuccess = function(event) {
+                // console.log(event.target.result);
+                console.log("Service worker response from indexedDB: " + JSON.stringify(event.target.result));
+                return event.target.result;
+            };
+
+            tx.oncomplete = function() {
+                db.close();
+            };
+        }
+
         return response || fetch(event.request).then(function(response) {
           if (response.url.includes("1337")) {
              var reply = response.clone();

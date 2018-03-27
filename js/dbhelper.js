@@ -34,11 +34,11 @@ class DBHelper {
       .then(function(response) {
           return response.json();
       })
-      .then(function(responseJson) {
-          console.log(responseJson);
-          // console.log("Development server response: " + JSON.stringify(responseJson));
-          return responseJson;
-      })
+      // .then(function(responseJson) {
+      //     console.log(responseJson);
+      //     console.log("Database for development server response: " + JSON.stringify(responseJson));
+      //     return responseJson;
+      // })
       .then(function(responseJson) {
           callback(null, responseJson);
       })
