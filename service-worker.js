@@ -130,20 +130,33 @@
 
           return response
             || promiseIndexedDB.then(function(result) {
+                console.log('Could not find in cache: ' + event.request.url);
                 if (event.request.url.includes("http://localhost:1337/restaurants")) {
-                  var debug = {hello: "world"};
                   var blob = new Blob([JSON.stringify(result)], {type : 'application/json'});
                   var response = new Response(blob);
                   console.log('Returning data from indexedDB: ' + response);
                   return response;
+                } else {
+                  // console.log('Fetch url: ' + event.request.url);
+                  // fetch(event.request).then(function(reply) {
+                  //     console.log('Returning data from server: ' + reply);
+                  //     return reply;
+                  // });
                 }
               }, function(err) {
-
+                // fetch(event.request.url).then(function(response) {
+                //     console.log('Returning data from server: ' + response);
+                //     return response;
+                // });
               })
-            || fetch(event.request).then(function(response) {
+            || fetch(event.request.url).then(function(response) {
                 console.log('Returning data from server: ' + response);
                 return response;
             });
+        }, function(err) {
+          // fetch(event.request.url).then(function(response) {
+          //   return response;
+          // });
         })
       );
     }
