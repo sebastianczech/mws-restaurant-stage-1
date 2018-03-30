@@ -2,7 +2,9 @@
 // npm install --save-dev gulp-clean-css
 // npm install --save-dev gulp-minify
 // npm install --save sharp
+// brew install homebrew/science/vips --with-webp --with-graphicsmagick
 // npm install --save-dev gulp-responsive
+// npm init -y
 
 var gulp = require('gulp');
 var cleanCSS = require('gulp-clean-css');
@@ -62,6 +64,8 @@ gulp.task('responsive', function () {
     }))
     .pipe(gulp.dest('dist'));
 });
+
+// gulp.task('watch', ...);
 
 gulp.task('default', defaultTask);
 
