@@ -27,7 +27,8 @@ function clean() {
   console.log('Cleaning dist directory.');
   return del([
     'dist/*.css',
-    'dist/*.js'
+    'dist/*.js',
+    'dist/*.jpg',
   ]);
 }
 
@@ -59,12 +60,12 @@ function responsiveImages() {
       '*.jpg': [
         {
           width: 800,
-          quality: 90,
-          rename: { suffix: '-800px-90q'},
+          quality: 70,
+          rename: { suffix: '-800px'},
         },{
-          width: 400,
-          quality: 80,
-          rename: { suffix: '-400px-80q'},
+          width: 320,
+          quality: 50,
+          rename: { suffix: '-320px'},
         }
       ]
     }, {
@@ -100,12 +101,14 @@ gulp.task('clean', clean);
 gulp.task('responsiveImages', responsiveImages);
 gulp.task('responsiveLogo', responsiveLogo);
 
-gulp.task('default', ['clean', 'minifyCss', 'compressJs']);
+gulp.task('default', ['clean', 'minifyCss', 'compressJs', 'responsiveImages', 'responsiveLogo']);
 
 gulp.task('watch', function () {
     watch(['js/*.js', 'css/*.css', 'service-worker.js'], function() {
       clean();
       minifyCss();
       compressJs();
+      responsiveImages();
+      responsiveLogo();
     });
 });
