@@ -166,11 +166,11 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/dist/${restaurant.photograph}`.slice(0,-4) + '-800px-90q.jpg');
+    return (`/dist/${restaurant.photograph}`.slice(0,-4) + '-800px.jpg');
   }
 
   static thumbnailImageUrlForRestaurant(restaurant) {
-    return (`/dist/${restaurant.photograph}`.slice(0,-4) + '-400px-80q.jpg');
+    return (`/dist/${restaurant.photograph}`.slice(0,-4) + '-320px.jpg');
   }
 
   /**
