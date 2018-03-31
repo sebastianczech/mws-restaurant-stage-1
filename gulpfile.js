@@ -16,6 +16,14 @@ var del = require('del');
 var watch = require('gulp-watch');
 
 function clean() {
+  var currentdate = new Date();
+  var datetime = currentdate.getFullYear() + "/"
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getDate() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+  console.log("\n--------------" + datetime + "--------------");
   console.log('Cleaning dist directory.');
   return del([
     'dist/*.css',
@@ -64,8 +72,6 @@ function responsive() {
     .pipe(gulp.dest('dist'));
 }
 
-// gulp.task('watch', ...);
-
 gulp.task('minifyCss', minifyCss);
 gulp.task('compressJs', compressJs);
 gulp.task('clean', clean);
@@ -74,7 +80,7 @@ gulp.task('responsive', responsive);
 gulp.task('default', ['clean', 'minifyCss', 'compressJs']);
 
 gulp.task('watch', function () {
-    watch('js/*.js', function() {
+    watch(['js/*.js', 'css/*.css', 'service-worker.js'], function() {
       clean();
       minifyCss();
       compressJs();
