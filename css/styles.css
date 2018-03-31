@@ -18,7 +18,7 @@ ul, li {
 	color: #333;
 }
 a {
-	color: orange;
+	color: #942D00;
 	text-decoration: none;
 }
 a:hover, a:focus {
@@ -39,9 +39,15 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   background-color: #f3f3f3;
   min-height: 100%;
 }
+#footer a {
+	color: yellow;
+}
+#footer a:hover {
+	color: #FFFF8F;
+}
 #footer {
   background-color: #444;
-  color: #aaa;
+  color: #ffffff;
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px 0px 25px 0px;
@@ -119,15 +125,21 @@ nav h1 a {
 .filter-options {
   width: 100%;
   height: auto;
-  background-color: #3397DB;
+  background-color: #333333;
   align-items: center;
 }
 .filter-options h2 {
   color: white;
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-weight: normal;
   line-height: 1;
   margin: 10px 5px 0px 15px;
+}
+.filter-options label {
+	color: #ffffff;
+	font-family: Arial,sans-serif;
+  font-size: 11pt;
+  margin: 5px 5px 10px 15px;
 }
 .filter-options select {
   background-color: white;
@@ -181,7 +193,7 @@ nav h1 a {
   font-size: 11pt;
 }
 #restaurants-list div a {
-  background-color: orange;
+  background-color: #942D00;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
