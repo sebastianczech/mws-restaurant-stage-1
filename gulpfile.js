@@ -52,20 +52,19 @@ function compressJs() {
     .pipe(gulp.dest('dist'))
 }
 
-function responsive() {
+function responsiveImages() {
   console.log('Making responsive images.');
   return gulp.src('img/*.{png,jpg}')
     .pipe(responsive({
-      'background-*.jpg': {
-        width: 700,
-        quality: 50
-      },
-      'logo.png': [
+      '*.jpg': [
         {
-          width: 200
+          width: 800,
+          quality: 90,
+          rename: { suffix: '-800px-90q'},
         },{
-          width: 200 * 2,
-          rename: 'logo@2x.png'
+          width: 400,
+          quality: 80,
+          rename: { suffix: '-400px-80q'},
         }
       ]
     }))
@@ -75,7 +74,7 @@ function responsive() {
 gulp.task('minifyCss', minifyCss);
 gulp.task('compressJs', compressJs);
 gulp.task('clean', clean);
-gulp.task('responsive', responsive);
+gulp.task('responsiveImages', responsiveImages);
 
 gulp.task('default', ['clean', 'minifyCss', 'compressJs']);
 
