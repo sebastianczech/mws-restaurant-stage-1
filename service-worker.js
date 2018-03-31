@@ -41,10 +41,13 @@
     'dist/8-800px-90q.jpg',
     'dist/9-400px-80q.jpg',
     'dist/9-800px-90q.jpg',
+    'dist/logo-512px.png',
+    'dist/logo-192px.png',
     'dist/dbhelper.js',
     'dist/main.js',
     'dist/restaurant_info.js',
     'dist/styles.css',
+    'manifest.json',
   ];
 
   var staticCacheName = 'mws-restaurant-cache-v1';
