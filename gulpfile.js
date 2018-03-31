@@ -67,6 +67,9 @@ function responsiveImages() {
           rename: { suffix: '-400px-80q'},
         }
       ]
+    }, {
+      progressive: true,
+      withMetadata: false,
     }))
     .pipe(gulp.dest('dist'));
 }
