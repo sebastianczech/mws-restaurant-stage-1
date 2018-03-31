@@ -7,11 +7,14 @@
     "gulp-clean-css": "^3.9.3",
     "gulp-minify": "^2.1.0",
     "gulp-responsive": "^2.9.0",
-    "gulp": "^3.9.1",
     "node-gyp": "^3.6.2",
     "sharp": "^0.20.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-watch": "^5.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
