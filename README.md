@@ -14,6 +14,13 @@ npm install sails -g
 node server
 ```
 
+## Check if API server is working
+
+You can check if API server is working by using following commands:
+
+```
+curl "http://localhost:1337/restaurants"
+```
 
 ## Starting application locally
 
@@ -22,3 +29,22 @@ After cloning repository from GitHub, you can start the application using e.g. c
 ```
 python -m SimpleHTTPServer 8000
 ```
+
+## Check if application is working
+
+You can start using application by opening in browser URL:
+
+```
+http://localhost:8000/
+```
+
+## Application features
+
+Restaurant reviews is simple web application made during course in Udacity: __Mobile Web Specialist Program__. Application is delivering such features like:
+   * filtering selected restaurants,
+   * showing restaurants on map,
+   * displaying reviews about restaurants.
+
+## License
+
+[MIT License](LICENSE.txt)
