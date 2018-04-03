@@ -47,4 +47,4 @@ Restaurant reviews is simple web application made during course in Udacity: __Mo
 
 ## License
 
-[MIT License](LICENSE.txt)
+Project is licensed under [MIT License](LICENSE.txt).
