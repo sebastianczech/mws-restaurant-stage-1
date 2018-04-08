@@ -3,7 +3,7 @@
 
 <head>
   <!-- <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" /> -->
-  <link rel="stylesheet" href="dist/styles.css">
+  <link rel="preload" href="dist/styles.css" as="style" onload="this.rel='stylesheet'">
   <title>Restaurant Reviews</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111111"/>
@@ -11,6 +11,25 @@
 </head>
 
 <body>
+  <script>
+    (function() {
+      'use strict';
+
+      if (!('serviceWorker' in navigator)) {
+        console.log('Service worker not supported');
+        return;
+      }
+      navigator.serviceWorker.register('service-worker.js')
+      .then(function(registration) {
+        console.log('Registered at scope:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Registration failed:', error);
+      });
+
+    })();
+  </script>
+
   <header>
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
@@ -45,30 +64,12 @@
 
   <script type="application/javascript" charset="utf-8" src="dist/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="dist/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
 
   <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
 
-  <script>
-    (function() {
-      'use strict';
-
-      if (!('serviceWorker' in navigator)) {
-        console.log('Service worker not supported');
-        return;
-      }
-      navigator.serviceWorker.register('service-worker.js')
-      .then(function(registration) {
-        console.log('Registered at scope:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Registration failed:', error);
-      });
-
-    })();
-  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
 
 </body>
 
