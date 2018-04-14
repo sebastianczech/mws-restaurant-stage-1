@@ -110,11 +110,26 @@
 
                            request.onsuccess = function(event) {
                                var db = event.target.result;
-                               var tx = db.transaction(storeName, "readwrite");
-                               var store = tx.objectStore(storeName);
+                               // var tx = db.transaction(storeName, "readwrite");
+                               // var store = tx.objectStore(storeName);
 
                                data.forEach(function (item) {
-                                 store.put(item);
+                                 fetch('http://localhost:1337/reviews/?restaurant_id=' + item.id).then(function(response2) {
+                                   var reply2 = response2.clone();
+                                   reply2.json().then(function(data2) {
+                                     console.log('Service worker is adding ' + reply2.url + ' to indexed database: ', data2);
+                                     data2.forEach(function (item2) {
+                                       console.log('IndexedDB adding review ' + JSON.stringify(item2));
+                                     });
+                                     item.reviews = data2;
+                                     console.log('IndexedDB adding restaurant ' + JSON.stringify(item));
+
+                                     var tx = db.transaction(storeName, "readwrite");
+                                     var store = tx.objectStore(storeName);
+                                     store.put(item);
+                                   });
+                                 });
+                                 // store.put(item);
                                })
 
                                tx.oncomplete = function() {
