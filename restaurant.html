@@ -63,6 +63,36 @@
         <!-- Beginning reviews -->
         <section id="reviews-container">
           <ul id="reviews-list" tabindex="0"></ul>
+
+          <!-- Trigger/Open The Modal -->
+          <button id="buttonAddReview" class="modal-button">Add review</button>
+
+          <!-- The Modal -->
+          <div id="modalAddReview" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="modal-close">&times;</span><br />
+              <form>
+                <label for="fname">Name:</label>
+                <input type="text" id="fname" name="name" placeholder="Name..">
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+
+                <label for="fcomments">Comments:</label>
+                <textarea id="fcomments" name="comments" rows="10" cols="60"></textarea>
+
+                <input type="submit" value="Submit">
+              </form>
+            </div>
+          </div>
         </section>
         <!-- End reviews -->
       </div>
