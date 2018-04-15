@@ -38,6 +38,35 @@ window.initMap = () => {
 }
 
 /**
+ * Action for button "add review" in modal
+ */
+function addReview() {
+  var name = document.getElementById('name').value;
+  var rating = document.getElementById('rating').value;
+  var comments = document.getElementById('comments').value;
+
+  const restaurant_id = getParameterByName('id');
+
+  console.log("Adding review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id);
+
+  var url = 'http://localhost:1337/reviews/';
+  var data = {restaurant_id: restaurant_id, name: name, rating: rating, comments: comments};
+
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(res => res.json())
+  .catch(error => console.error('Error:', error))
+  .then(response => console.log('Success:', response));
+
+  console.log("Closing modal and displaying page");
+  document.getElementById('modalAddReview').style.display = "none";
+}
+
+/**
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
