@@ -436,19 +436,20 @@ nav h1 a {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
     padding: 10px;
     border: 1px solid #888;
 }
 
 @media screen and (max-width: 768px) {
 	.modal-content {
+		margin: 25% auto;
 		width: 80%;
 	}
 }
 
 @media screen and (min-width: 769px) {
 	.modal-content {
+		margin: 15% auto;
 		width: 50%;
 	}
 }
@@ -479,12 +480,15 @@ input[type=text], select, textarea {
     border-radius: 4px;
     box-sizing: border-box;
 }
+.modal-content form input[type=text] {
+		max-width: 180px;
+}
 
 .modal-content form select {
 		max-width: 60px;
 }
 
-input[type=submit] {
+input[type=button] {
     width: 100%;
     background-color: #942D00;
     color: white;
@@ -497,6 +501,6 @@ input[type=submit] {
 		text-transform: uppercase;
 }
 
-input[type=submit]:hover {
+input[type=button]:hover {
     background-color: #8a1f00;
 }
