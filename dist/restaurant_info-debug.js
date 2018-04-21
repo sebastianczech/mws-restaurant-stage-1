@@ -58,9 +58,54 @@ function addReview() {
     headers: new Headers({
       'Content-Type': 'application/json'
     })
-  }).then(res => res.json())
-  .catch(error => console.error('Error:', error))
-  .then(response => console.log('Success:', response));
+  })
+  .then(res => {
+    res.json()
+  })
+  .catch(error => {
+    console.error('Error:', error)
+  })
+  .then(response => {
+    console.log('Success:', response)
+  });
+
+  console.log("Caching review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id);
+
+  var db;
+  const indexedDBName = 'mws-restaurant-db-v1';
+  const storeName = 'mws-restaurant-store-v1';
+  const request = indexedDB.open(indexedDBName, 1 );
+  request.onerror = function(event) {
+    console.error("indexedDB error");
+  };
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    var tx = db.transaction(storeName, "readwrite");
+    var store = tx.objectStore(storeName);
+
+    console.log("Getting object store with read write access to indexDB");
+
+    store.openCursor().onsuccess = function(event) {
+      var cursor = event.target.result;
+      if(cursor) {
+        console.log("Trying to find id " + restaurant_id + " and getting cursor for object store for id " + cursor.value.id +  ": " + cursor.value);
+        if(cursor.value.id == restaurant_id) {
+          console.log("Finding object for restaurant id " + restaurant_id);
+          var updateData = cursor.value;
+          data.createdAt = new Date();
+          data.updatedAt = new Date();
+          updateData.reviews.push(data);
+          var request = cursor.update(updateData);
+          request.onsuccess = function() {
+            const ul = document.getElementById('reviews-list');
+            ul.appendChild(createReviewHTML(data));
+            console.log("Updating in indexDB review for restaurant with id " + restaurant_id);
+          };
+        };
+        cursor.continue();
+      }
+    };
+  };
 
   console.log("Closing modal and displaying page");
   document.getElementById('modalAddReview').style.display = "none";
