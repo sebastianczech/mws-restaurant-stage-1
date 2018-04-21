@@ -76,7 +76,7 @@
           var promiseIndexedDB = function(url) {
             console.log('Checking indexedDB for url: ' + url);
             return new Promise(function(resolve, reject) {
-              if (url.includes("http://localhost:1337/restaurants"))
+              if (url.includes("http://localhost:1337/restaurants") && !url.includes("is_favorite"))
               {
                 console.log('Using indexDB for url: ' + url);
 

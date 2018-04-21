@@ -19,7 +19,9 @@ window.initMap = () => {
     }
   });
 
-  // modals
+  /**
+   * Modals
+   */
   var modal = document.getElementById('modalAddReview');
   var btn = document.getElementById("buttonAddReview");
   var span = document.getElementsByClassName("modal-close")[0];
@@ -36,6 +38,73 @@ window.initMap = () => {
       }
   }
 }
+
+/**
+ * Favorite
+ */
+
+ var buttonToggleFavourite = document.getElementById("buttonToggleFavourite");
+ buttonToggleFavourite.onclick = function() {
+    buttonToggleFavourite.classList.toggle("favorite");
+    buttonToggleFavourite.classList.toggle("unfavorite");
+
+    var text = buttonToggleFavourite.firstChild;
+    text.data = text.data == "Favorite" ? "Unfavorite" : "Favorite";
+    console.log("Changing button text to " + buttonToggleFavourite.text);
+
+    const restaurant_id = getParameterByName('id');
+    var url = 'http://localhost:1337/restaurants/' + restaurant_id + '/?is_favorite=' + (text.data == "Favorite");
+    console.log("Mark restaurant as favorite or unfavorite by sending PUT request: " + url);
+    fetch(url, {
+      method: 'PUT',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+    .then(res => {
+      res.json()
+    })
+    .catch(error => {
+      console.error('Error:', error)
+    })
+    .then(response => {
+      console.log('Success:', response)
+    });
+
+    console.log("Caching favorite for restaurant with id " + restaurant_id);
+
+    var db;
+    const indexedDBName = 'mws-restaurant-db-v1';
+    const storeName = 'mws-restaurant-store-v1';
+    const request = indexedDB.open(indexedDBName, 1 );
+    request.onerror = function(event) {
+      console.error("indexedDB error");
+    };
+    request.onsuccess = function(event) {
+      db = event.target.result;
+      var tx = db.transaction(storeName, "readwrite");
+      var store = tx.objectStore(storeName);
+
+      console.log("Getting object store with read write access to indexDB");
+
+      store.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if(cursor) {
+          console.log("Trying to find id " + restaurant_id + " and getting cursor for object store for id " + cursor.value.id +  ": " + cursor.value);
+          if(cursor.value.id == restaurant_id) {
+            console.log("Finding object for restaurant id " + restaurant_id);
+            var updateData = cursor.value;
+            updateData.is_favorite = (text.data == "Favorite")
+            var request = cursor.update(updateData);
+            request.onsuccess = function() {
+              console.log("Updating in indexDB review for restaurant with id " + restaurant_id);
+            };
+          };
+          cursor.continue();
+        }
+      };
+    };
+ }
 
 /**
  * Action for button "add review" in modal
@@ -153,6 +222,17 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  var text = buttonToggleFavourite.firstChild;
+  if (restaurant.is_favorite) {
+    buttonToggleFavourite.classList.add("favorite");
+    console.log("Setting favorite for restaurant");
+    text.data = "Favorite";
+  } else {
+    console.log("Setting unfavorite for restaurant");
+    buttonToggleFavourite.classList.add("unfavorite");
+    text.data = "Unfavorite";
+  }
 
   // fill operating hours
   if (restaurant.operating_hours) {
