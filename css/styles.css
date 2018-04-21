@@ -504,3 +504,20 @@ input[type=button] {
 input[type=button]:hover {
     background-color: #8a1f00;
 }
+
+.favorite {
+	background-color: #1b5e20;
+}
+
+
+.favorite:hover {
+	background-color: #2e7d32;
+}
+
+.unfavorite {
+	background-color: #b71c1c;
+}
+
+.unfavorite:hover {
+	background-color: #c62828;
+}
