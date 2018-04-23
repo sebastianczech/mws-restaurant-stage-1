@@ -65,7 +65,34 @@ window.initMap = () => {
       res.json()
     })
     .catch(error => {
-      console.error('Error:', error)
+      console.error('Error:', error);
+      console.log('Using special indexDB database for caching request, which were not serverd');
+
+      const indexedDBName = 'mws-restaurant-offline-v1';
+      const storeName = 'mws-restaurant-favorite-v1';
+      const request = indexedDB.open(indexedDBName, 1 );
+      request.onerror = function(event) {
+        console.error("indexedDB error");
+      };
+      request.onupgradeneeded = function(event) {
+          var db = event.target.result;
+          var store = db.createObjectStore(storeName, {keyPath: "id"});
+      };
+      request.onsuccess = function(event) {
+        var db = event.target.result;
+        var tx = db.transaction(storeName, "readwrite");
+        var store = tx.objectStore(storeName);
+
+        var offline = {};
+        offline.url = "'" + url + "''";
+        offline.id = new Date().getTime();
+
+        console.log("Add url " + url + " to offline cache in indexDB with id " + offline.id);
+
+        var tx = db.transaction(storeName, "readwrite");
+        var store = tx.objectStore(storeName);
+        store.put(offline);
+      };
     })
     .then(response => {
       console.log('Success:', response)
@@ -132,7 +159,8 @@ function addReview() {
     res.json()
   })
   .catch(error => {
-    console.error('Error:', error)
+    console.error('Error:', error);
+    console.log('Using special indexDB database for caching request, which were not serverd');
   })
   .then(response => {
     console.log('Success:', response)
