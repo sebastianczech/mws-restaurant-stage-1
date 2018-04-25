@@ -70,6 +70,7 @@ window.initMap = () => {
 
       const indexedDBName = 'mws-restaurant-offline-v1';
       const storeName = 'mws-restaurant-favorite-v1';
+      const storeNameForReviews = 'mws-restaurant-review-v1';
       const request = indexedDB.open(indexedDBName, 1 );
       request.onerror = function(event) {
         console.error("indexedDB error");
@@ -77,6 +78,7 @@ window.initMap = () => {
       request.onupgradeneeded = function(event) {
           var db = event.target.result;
           var store = db.createObjectStore(storeName, {keyPath: "id"});
+          var storeForReviews = db.createObjectStore(storeNameForReviews, {keyPath: "id"});
       };
       request.onsuccess = function(event) {
         var db = event.target.result;
@@ -161,6 +163,37 @@ function addReview() {
   .catch(error => {
     console.error('Error:', error);
     console.log('Using special indexDB database for caching request, which were not serverd');
+
+    const indexedDBName = 'mws-restaurant-offline-v1';
+    const storeName = 'mws-restaurant-review-v1';
+    const storeNameForFavorite = 'mws-restaurant-favorite-v1';
+    const request = indexedDB.open(indexedDBName, 1 );
+    request.onerror = function(event) {
+      console.error("indexedDB error");
+    };
+    request.onupgradeneeded = function(event) {
+        var db = event.target.result;
+        var store = db.createObjectStore(storeName, {keyPath: "id"});
+        var storeForFavorite = db.createObjectStore(storeNameForFavorite, {keyPath: "id"});
+    };
+    request.onsuccess = function(event) {
+      var db = event.target.result;
+      var tx = db.transaction(storeName, "readwrite");
+      var store = tx.objectStore(storeName);
+
+      var offline = {};
+      offline.restaurant_id = data.restaurant_id;
+      offline.name = data.name;
+      offline.rating = data.rating;
+      offline.comments = data.comments;
+      offline.id = new Date().getTime();
+
+      console.log("Add review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id + " to offline cache in indexDB with id " + offline.id);
+
+      var tx = db.transaction(storeName, "readwrite");
+      var store = tx.objectStore(storeName);
+      store.put(offline);
+    };
   })
   .then(response => {
     console.log('Success:', response)
