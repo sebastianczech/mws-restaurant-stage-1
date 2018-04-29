@@ -37,6 +37,11 @@ window.initMap = () => {
           modal.style.display = "none";
       }
   }
+
+  /**
+   * Sent to the server when connectivity is re-established
+   */
+  sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished();
 }
 
 /**
@@ -239,6 +244,60 @@ function addReview() {
 
   console.log("Closing modal and displaying page");
   document.getElementById('modalAddReview').style.display = "none";
+}
+
+/**
+ * Sent data to the server when connectivity is re-established
+ */
+
+function sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished() {
+  console.log("Sent data from indexedDB offline stores to the server when connectivity is re-established");
+
+  var db;
+  const indexedDBName = 'mws-restaurant-offline-v1';
+  const storeNameForReviews = 'mws-restaurant-review-v1';
+  const storeNameForFavorite = 'mws-restaurant-favorite-v1';
+  const request = indexedDB.open(indexedDBName, 1 );
+  request.onerror = function(event) {
+    console.error("indexedDB error");
+  };
+  request.onupgradeneeded = function(event) {
+      var db = event.target.result;
+      var storeForFavorite = db.createObjectStore(storeNameForFavorite, {keyPath: "id"});
+      var storeForReviews = db.createObjectStore(storeNameForReviews, {keyPath: "id"});
+  };
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    var tx = db.transaction(storeNameForReviews, "readwrite");
+    var store = tx.objectStore(storeNameForReviews);
+
+    console.log("Get offline object from store for reviews with read write access to indexedDB");
+
+    store.openCursor().onsuccess = function(event) {
+      var cursor = event.target.result;
+      if(cursor) {
+        console.log("Get offline object for reviews with id " + cursor.value.id +  ": "
+            + cursor.value.name + ", " + cursor.value.rating + ", " + cursor.value.comments + ", " + cursor.value.restaurant_id);
+        // ...
+
+        cursor.continue();
+      }
+    };
+
+    tx = db.transaction(storeNameForFavorite, "readwrite");
+    store = tx.objectStore(storeNameForFavorite);
+
+    console.log("Get offline object from store for favorite with read write access to indexedDB");
+
+    store.openCursor().onsuccess = function(event) {
+      var cursor = event.target.result;
+      if(cursor) {
+        console.log("Get offline object for favorite with id " + cursor.value.id +  ": " + cursor.value.url);
+        // ...
+        cursor.continue();
+      }
+    };
+  };
 }
 
 /**
