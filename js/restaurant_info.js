@@ -91,7 +91,7 @@ window.initMap = () => {
         var store = tx.objectStore(storeName);
 
         var offline = {};
-        offline.url = "'" + url + "''";
+        offline.url = url;
         offline.id = new Date().getTime();
 
         console.log("Add url " + url + " to offline cache in indexDB with id " + offline.id);
@@ -278,7 +278,33 @@ function sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished
       if(cursor) {
         console.log("Get offline object for reviews with id " + cursor.value.id +  ": "
             + cursor.value.name + ", " + cursor.value.rating + ", " + cursor.value.comments + ", " + cursor.value.restaurant_id);
-        // ...
+
+        var url = 'http://localhost:1337/reviews/';
+        var data = {restaurant_id: cursor.value.restaurant_id, name: cursor.value.name, rating: cursor.value.rating, comments: cursor.value.comments};
+
+        fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {
+          res.json()
+        })
+        .then(response => {
+          console.log('Remove offline object for reviews with id ' + + cursor.value.id);
+
+          var deleteTx = db.transaction(storeNameForReviews, "readwrite");
+          var deleteStore = deleteTx.objectStore(storeNameForReviews);
+          var deleteRequest = deleteStore.delete(cursor.value.id);
+          deleteRequest.onsuccess = function(event) {
+             console.log('Removed offline object for reviews with id ' + + cursor.value.id);
+          };
+        })
+        .catch(error => {
+          console.log('Cannot remove offline object for reviews with id ' + + cursor.value.id);
+        });
 
         cursor.continue();
       }
@@ -293,7 +319,30 @@ function sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished
       var cursor = event.target.result;
       if(cursor) {
         console.log("Get offline object for favorite with id " + cursor.value.id +  ": " + cursor.value.url);
-        // ...
+
+        fetch(cursor.value.url, {
+          method: 'PUT',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {
+          res.json()
+        })
+        .then(response => {
+          console.log('Remove offline object for favorite with id ' + + cursor.value.id);
+
+          var deleteTx = db.transaction(storeNameForFavorite, "readwrite");
+          var deleteStore = deleteTx.objectStore(storeNameForFavorite);
+          var deleteRequest = deleteStore.delete(cursor.value.id);
+          deleteRequest.onsuccess = function(event) {
+             console.log('Removed offline object for favorite with id ' + + cursor.value.id);
+          };
+        })
+        .catch(error => {
+          console.log('Cannot remove offline object for favorite with id ' + + cursor.value.id);
+        });
+
         cursor.continue();
       }
     };
