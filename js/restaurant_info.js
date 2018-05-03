@@ -18,10 +18,14 @@ window.initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
+}
 
-  /**
-   * Modals
-   */
+/**
+ * Action after creating button add review and opening modal
+ */
+createModalForAddingReviewForRestaurant();
+
+function createModalForAddingReviewForRestaurant() {
   var modal = document.getElementById('modalAddReview');
   var btn = document.getElementById("buttonAddReview");
   var span = document.getElementsByClassName("modal-close")[0];
@@ -37,17 +41,11 @@ window.initMap = () => {
           modal.style.display = "none";
       }
   }
-
-  /**
-   * Sent to the server when connectivity is re-established
-   */
-  sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished();
 }
 
 /**
- * Favorite
+ * Action after clicking favorite / unfavorite button
  */
-
  var buttonToggleFavourite = document.getElementById("buttonToggleFavourite");
  buttonToggleFavourite.onclick = function() {
     buttonToggleFavourite.classList.toggle("favorite");
@@ -71,74 +69,88 @@ window.initMap = () => {
     })
     .catch(error => {
       console.error('Error:', error);
-      console.log('Using special indexDB database for caching request, which were not serverd');
-
-      const indexedDBName = 'mws-restaurant-offline-v1';
-      const storeName = 'mws-restaurant-favorite-v1';
-      const storeNameForReviews = 'mws-restaurant-review-v1';
-      const request = indexedDB.open(indexedDBName, 1 );
-      request.onerror = function(event) {
-        console.error("indexedDB error");
-      };
-      request.onupgradeneeded = function(event) {
-          var db = event.target.result;
-          var store = db.createObjectStore(storeName, {keyPath: "id"});
-          var storeForReviews = db.createObjectStore(storeNameForReviews, {keyPath: "id"});
-      };
-      request.onsuccess = function(event) {
-        var db = event.target.result;
-        var tx = db.transaction(storeName, "readwrite");
-        var store = tx.objectStore(storeName);
-
-        var offline = {};
-        offline.url = url;
-        offline.id = new Date().getTime();
-
-        console.log("Add url " + url + " to offline cache in indexDB with id " + offline.id);
-
-        var tx = db.transaction(storeName, "readwrite");
-        var store = tx.objectStore(storeName);
-        store.put(offline);
-      };
+      cacheFavoriteRequestInIndexedDbDatabase(url);
     })
     .then(response => {
       console.log('Success:', response)
     });
 
-    console.log("Caching favorite for restaurant with id " + restaurant_id);
-
-    var db;
-    const indexedDBName = 'mws-restaurant-db-v1';
-    const storeName = 'mws-restaurant-store-v1';
-    const request = indexedDB.open(indexedDBName, 1 );
-    request.onerror = function(event) {
-      console.error("indexedDB error");
-    };
-    request.onsuccess = function(event) {
-      db = event.target.result;
-      var tx = db.transaction(storeName, "readwrite");
-      var store = tx.objectStore(storeName);
-
-      console.log("Getting object store with read write access to indexDB");
-
-      store.openCursor().onsuccess = function(event) {
-        var cursor = event.target.result;
-        if(cursor) {
-          console.log("Trying to find id " + restaurant_id + " and getting cursor for object store for id " + cursor.value.id +  ": " + cursor.value);
-          if(cursor.value.id == restaurant_id) {
-            console.log("Finding object for restaurant id " + restaurant_id);
-            var updateData = cursor.value;
-            updateData.is_favorite = (text.data == "Favorite")
-            var request = cursor.update(updateData);
-            request.onsuccess = function() {
-              console.log("Updating in indexDB review for restaurant with id " + restaurant_id);
-            };
-          };
-          cursor.continue();
-        }
-      };
-    };
+    updateRestaurantStoreFavoriteAttribute(restaurant_id, text);
  }
+
+/**
+ * Cache favorite request in indexedDB
+ */
+ function cacheFavoriteRequestInIndexedDbDatabase(url) {
+   console.log('Using special indexDB database for caching request, which were not serverd');
+
+   const indexedDBName = 'mws-restaurant-offline-v1';
+   const storeName = 'mws-restaurant-favorite-v1';
+   const storeNameForReviews = 'mws-restaurant-review-v1';
+   const request = indexedDB.open(indexedDBName, 1 );
+   request.onerror = function(event) {
+     console.error("indexedDB error");
+   };
+   request.onupgradeneeded = function(event) {
+       var db = event.target.result;
+       var store = db.createObjectStore(storeName, {keyPath: "id"});
+       var storeForReviews = db.createObjectStore(storeNameForReviews, {keyPath: "id"});
+   };
+   request.onsuccess = function(event) {
+     var db = event.target.result;
+     var tx = db.transaction(storeName, "readwrite");
+     var store = tx.objectStore(storeName);
+
+     var offline = {};
+     offline.url = url;
+     offline.id = new Date().getTime();
+
+     console.log("Add url " + url + " to offline cache in indexDB with id " + offline.id);
+
+     var tx = db.transaction(storeName, "readwrite");
+     var store = tx.objectStore(storeName);
+     store.put(offline);
+   };
+ }
+
+ /**
+  * Update restaurant store in IndexedDB with changed value of favorite attribute
+  */
+function updateRestaurantStoreFavoriteAttribute(restaurant_id, text) {
+  console.log("Caching favorite for restaurant with id " + restaurant_id);
+
+  var db;
+  const indexedDBName = 'mws-restaurant-db-v1';
+  const storeName = 'mws-restaurant-store-v1';
+  const request = indexedDB.open(indexedDBName, 1 );
+  request.onerror = function(event) {
+    console.error("indexedDB error");
+  };
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    var tx = db.transaction(storeName, "readwrite");
+    var store = tx.objectStore(storeName);
+
+    console.log("Getting object store with read write access to indexDB");
+
+    store.openCursor().onsuccess = function(event) {
+      var cursor = event.target.result;
+      if(cursor) {
+        console.log("Trying to find id " + restaurant_id + " and getting cursor for object store for id " + cursor.value.id +  ": " + cursor.value);
+        if(cursor.value.id == restaurant_id) {
+          console.log("Finding object for restaurant id " + restaurant_id);
+          var updateData = cursor.value;
+          updateData.is_favorite = (text.data == "Favorite")
+          var request = cursor.update(updateData);
+          request.onsuccess = function() {
+            console.log("Updating in indexDB review for restaurant with id " + restaurant_id);
+          };
+        };
+        cursor.continue();
+      }
+    };
+  };
+}
 
 /**
  * Action for button "add review" in modal
@@ -247,8 +259,9 @@ function addReview() {
 }
 
 /**
- * Sent data to the server when connectivity is re-established
+ * Send data to the server when connectivity is re-established
  */
+sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished();
 
 function sendDataFromIndexedDbOfflineStoresToServerWhenConnectivityReestablished() {
   console.log("Sent data from indexedDB offline stores to the server when connectivity is re-established");
