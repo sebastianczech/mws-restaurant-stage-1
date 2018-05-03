@@ -179,43 +179,60 @@ function addReview() {
   })
   .catch(error => {
     console.error('Error:', error);
-    console.log('Using special indexDB database for caching request, which were not serverd');
-
-    const indexedDBName = 'mws-restaurant-offline-v1';
-    const storeName = 'mws-restaurant-review-v1';
-    const storeNameForFavorite = 'mws-restaurant-favorite-v1';
-    const request = indexedDB.open(indexedDBName, 1 );
-    request.onerror = function(event) {
-      console.error("indexedDB error");
-    };
-    request.onupgradeneeded = function(event) {
-        var db = event.target.result;
-        var store = db.createObjectStore(storeName, {keyPath: "id"});
-        var storeForFavorite = db.createObjectStore(storeNameForFavorite, {keyPath: "id"});
-    };
-    request.onsuccess = function(event) {
-      var db = event.target.result;
-      var tx = db.transaction(storeName, "readwrite");
-      var store = tx.objectStore(storeName);
-
-      var offline = {};
-      offline.restaurant_id = data.restaurant_id;
-      offline.name = data.name;
-      offline.rating = data.rating;
-      offline.comments = data.comments;
-      offline.id = new Date().getTime();
-
-      console.log("Add review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id + " to offline cache in indexDB with id " + offline.id);
-
-      var tx = db.transaction(storeName, "readwrite");
-      var store = tx.objectStore(storeName);
-      store.put(offline);
-    };
+    cacheAddReviewRequestInIndexedDbDatabase(url, data, restaurant_id);
   })
   .then(response => {
     console.log('Success:', response)
   });
 
+  updateRestaurantStoreReviewAttribute(data, name, rating, comments, restaurant_id);
+
+  console.log("Closing modal and displaying page");
+  document.getElementById('modalAddReview').style.display = "none";
+}
+
+/**
+ * Cache add review request in indexedDB
+ */
+function cacheAddReviewRequestInIndexedDbDatabase(url, data, restaurant_id) {
+  console.log('Using special indexDB database for caching request, which were not serverd');
+
+  const indexedDBName = 'mws-restaurant-offline-v1';
+  const storeName = 'mws-restaurant-review-v1';
+  const storeNameForFavorite = 'mws-restaurant-favorite-v1';
+  const request = indexedDB.open(indexedDBName, 1 );
+  request.onerror = function(event) {
+    console.error("indexedDB error");
+  };
+  request.onupgradeneeded = function(event) {
+      var db = event.target.result;
+      var store = db.createObjectStore(storeName, {keyPath: "id"});
+      var storeForFavorite = db.createObjectStore(storeNameForFavorite, {keyPath: "id"});
+  };
+  request.onsuccess = function(event) {
+    var db = event.target.result;
+    var tx = db.transaction(storeName, "readwrite");
+    var store = tx.objectStore(storeName);
+
+    var offline = {};
+    offline.restaurant_id = data.restaurant_id;
+    offline.name = data.name;
+    offline.rating = data.rating;
+    offline.comments = data.comments;
+    offline.id = new Date().getTime();
+
+    console.log("Add review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id + " to offline cache in indexDB with id " + offline.id);
+
+    var tx = db.transaction(storeName, "readwrite");
+    var store = tx.objectStore(storeName);
+    store.put(offline);
+  };
+}
+
+/**
+ * Update restaurant store in IndexedDB with new review
+ */
+function updateRestaurantStoreReviewAttribute(data, name, rating, comments, restaurant_id) {
   console.log("Caching review with name \"" + name + "\" rating " + rating + " and comments \"" + comments + "\" for restaurant with id " + restaurant_id);
 
   var db;
@@ -253,9 +270,6 @@ function addReview() {
       }
     };
   };
-
-  console.log("Closing modal and displaying page");
-  document.getElementById('modalAddReview').style.display = "none";
 }
 
 /**
