@@ -65,10 +65,10 @@
           <ul id="reviews-list" tabindex="0"></ul>
 
           <!-- Trigger/Open The Modal -->
-          <button id="buttonAddReview" class="modal-button">Add review</button>
+          <button id="buttonAddReview" class="modal-button" type="button" aria-pressed="false">Add review</button>
 
           <!-- Mark restaurant as favourite / unfavorite -->
-          <button id="buttonToggleFavourite" class="modal-button">Unknown</button>
+          <button id="buttonToggleFavourite" class="modal-button" type="button" aria-pressed="false">Unknown</button>
 
           <!-- The Modal -->
           <div id="modalAddReview" class="modal">
@@ -92,7 +92,7 @@
                 <label for="comments">Comments:</label>
                 <textarea id="comments" name="comments" rows="10" cols="60"></textarea>
 
-                <input type="button" onclick="addReview()" value="Add review">
+                <input type="button" onclick="addReview()" value="Add review" type="button" aria-pressed="false">
               </form>
             </div>
           </div>
