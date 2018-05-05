@@ -109,7 +109,7 @@
                            };
 
                            request.onsuccess = function(event) {
-                               var db = event.target.result;
+                               // var db = event.target.result;
                                // var tx = db.transaction(storeName, "readwrite");
                                // var store = tx.objectStore(storeName);
 
@@ -124,6 +124,7 @@
                                      item.reviews = data2;
                                      console.log('IndexedDB adding restaurant ' + JSON.stringify(item));
 
+                                     var db = event.target.result;
                                      var tx = db.transaction(storeName, "readwrite");
                                      var store = tx.objectStore(storeName);
                                      store.put(item);
@@ -132,9 +133,9 @@
                                  // store.put(item);
                                })
 
-                               tx.oncomplete = function() {
-                                   db.close();
-                               };
+                               // tx.oncomplete = function() {
+                               //     db.close();
+                               // };
                            }
                          })
                     });
