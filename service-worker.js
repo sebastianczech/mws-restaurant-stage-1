@@ -171,20 +171,6 @@
                         });
                     };
                 }
-              } else if (url.includes("https://maps.googleapis.com/maps/api/js")
-                    || url.includes("https://maps.googleapis.com/maps-api-v3")
-                    || url.includes("https://fonts.googleapis.com")
-                    || url.includes("https://fonts.gstatic.com")
-                    || url.includes("https://maps.gstatic.com")) {
-                console.log('Caching data from Google for url: ' + url);
-                return fetch(event.request).then(function(response) {
-                    var resp = response.clone();
-                    var req = event.request.clone();
-                    caches.open(staticCacheName).then(function(cache) {
-                      cache.put(req, resp);
-                    });
-                    return response;
-                });
               } else {
                 console.log('Cannot use indexDB for url: ' + url);
                 reject();
@@ -203,6 +189,24 @@
                 console.log('File need to be fetched from url: ' + event.request.url);
                 return fetch(event.request).then(function(response) {
                     console.log('Returning data ' + event.request.url + ' from server after failed indexedDB: ' + response);
+
+                    // if (event.request.url.includes("https://maps.googleapis.com/maps/api/js")
+                    //       || event.request.url.includes("https://maps.googleapis.com/maps-api-v3")
+                    //       || event.request.url.includes("https://fonts.googleapis.com")
+                    //       || event.request.url.includes("https://fonts.gstatic.com")
+                    //       || event.request.url.includes("https://maps.gstatic.com")) {
+                    //   console.log('Caching data from Google for url: ' + event.request.url);
+                    //   // return fetch(event.request).then(function(response) {
+                    //       var resp = response.clone();
+                    //       var req = event.request.clone();
+                    //       caches.open(staticCacheName).then(function(cache) {
+                    //         cache.put(req, resp);
+                    //       });
+                    //       return response;
+                    //   // });
+                    // } else {
+                    //   return response;
+                    // }
                     return response;
                 });
               })
