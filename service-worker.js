@@ -190,12 +190,12 @@
                 return fetch(event.request).then(function(response) {
                     console.log('Returning data ' + event.request.url + ' from server after failed indexedDB: ' + response);
 
-                    // if (event.request.url.includes("https://maps.googleapis.com/maps/api/js")
-                    //       || event.request.url.includes("https://maps.googleapis.com/maps-api-v3")
-                    //       || event.request.url.includes("https://fonts.googleapis.com")
-                    //       || event.request.url.includes("https://fonts.gstatic.com")
-                    //       || event.request.url.includes("https://maps.gstatic.com")) {
-                    //   console.log('Caching data from Google for url: ' + event.request.url);
+                    if (event.request.url.includes("https://maps.googleapis.com/maps/api/js")
+                          || event.request.url.includes("https://maps.googleapis.com/maps-api-v3")
+                          || event.request.url.includes("https://fonts.googleapis.com")
+                          || event.request.url.includes("https://fonts.gstatic.com")
+                          || event.request.url.includes("https://maps.gstatic.com")) {
+                      console.log('Caching data from Google for url: ' + event.request.url);
                     //   // return fetch(event.request).then(function(response) {
                     //       var resp = response.clone();
                     //       var req = event.request.clone();
@@ -206,7 +206,7 @@
                     //   // });
                     // } else {
                     //   return response;
-                    // }
+                    }
                     return response;
                 });
               })
