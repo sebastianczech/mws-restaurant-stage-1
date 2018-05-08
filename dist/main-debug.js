@@ -11,7 +11,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
   updateRestaurants();
   fetchNeighborhoods();
   fetchCuisines();
+  startIntersectionObserver();
 });
+
+/**
+ * Intersection Observer API
+ * https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+ */
+startIntersectionObserver = () => {
+  console.log('Starting intersection observer');
+
+  // TODO: implement intersection observer
+ }
 
 /**
  * Fetch all neighborhoods and set their HTML.
