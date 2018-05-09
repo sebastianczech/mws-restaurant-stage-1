@@ -12,7 +12,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
   startIntersectionObserver();
+  loadGoogleMap();
 });
+
+function loadGoogleMap() {
+  var js_file = document.createElement('script');
+  js_file.type = 'text/javascript';
+  js_file.src = 'https://maps.googleapis.com/maps/api/js?v=3&key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap';
+  js_file.defer = true;
+  js_file.async = true;
+  console.log('Adding Google Map JavaScript file: ' + js_file);
+  document.getElementsByTagName('head')[0].appendChild(js_file);
+}
 
 /**
  * Intersection Observer API
