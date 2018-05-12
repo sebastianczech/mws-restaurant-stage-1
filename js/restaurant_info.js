@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fillBreadcrumb();
     }
   });
-  loadGoogleMap();
 });
 
 function loadGoogleMap() {
@@ -19,6 +18,8 @@ function loadGoogleMap() {
   js_file.defer = true;
   js_file.async = true;
   console.log('Adding Google Map JavaScript file: ' + js_file);
+  document.getElementById('map').style.display = 'block';
+  document.getElementById('toggle-map').style.display = 'none';
   document.getElementsByTagName('head')[0].appendChild(js_file);
 }
 
