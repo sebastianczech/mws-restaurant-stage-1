@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fillBreadcrumb();
     }
   });
+  const mq = window.matchMedia( "(min-width: 769px)" );
+  if (mq.matches) {
+    console.log('Window has minimum width 769px so Google Map is being loaded');
+    loadGoogleMap();
+  } else {
+    document.getElementById('map-container').style.minHeight = '120px';
+    document.getElementById('map-container').style.height = '120px';
+  }
 });
 
 function loadGoogleMap() {
@@ -20,6 +28,11 @@ function loadGoogleMap() {
   console.log('Adding Google Map JavaScript file: ' + js_file);
   document.getElementById('map').style.display = 'block';
   document.getElementById('toggle-map').style.display = 'none';
+  const mq = window.matchMedia( "(max-width: 768px)" );
+  if (mq.matches) {
+    document.getElementById('map-container').style.minHeight = '320px';
+    document.getElementById('map-container').style.height = '320px';
+  }
   document.getElementsByTagName('head')[0].appendChild(js_file);
 }
 

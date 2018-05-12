@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
   startIntersectionObserver();
+
+  const mq = window.matchMedia( "(min-width: 769px)" );
+  if (mq.matches) {
+    console.log('Window has minimum width 769px so Google Map is being loaded');
+    loadGoogleMap();
+  }
 });
 
 function loadGoogleMap() {
